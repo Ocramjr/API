@@ -13,10 +13,10 @@ const users = [
 
 const getAllUsers = () => users;
 
-const getUserById = (userId) => users.find((user) => users.id === userId);
+const getUserById = (userId) => users.find((user) => user.id === userId);
 
 const getUserByEmail = (userEmail) =>
-  users.find((user) => users.email === userEmail);
+  users.find((user) => user.email === userEmail);
 
 const getUserByCpf = (userCpf) => users.find((user) => user.cpf === userCpf);
 
@@ -31,11 +31,12 @@ const editUser = (updateUser) => {
   return updateUser;
 };
 
-const deleteUser = (deleteUser) => {
+const deletedUser = (deleteUser) => {
   const index = users.findIndex((user) => user.id === deleteUser.id);
   const deletedUser = users.splice(index, 1);
   return deletedUser;
 };
+
 
 export default {
   getAllUsers,
@@ -44,5 +45,5 @@ export default {
   getUserByCpf,
   createUser,
   editUser,
-  deleteUser,
+  deletedUser,
 };

@@ -5,7 +5,7 @@ const getUserById = (userId) => userRepository.getUserById(userId);
 const getUserByEmail = (userEmail) => userRepository.getUserByEmail(userEmail);
 const getUserByCpf = (userCpf) => userRepository.getUserByCpf(userCpf);
 const createUser = (newUser) => userRepository.createUser(newUser);
-const deletedUser = (deleteUser) => userRepository.deleteUser(userId);
+const deletedUser = (userId) => userRepository.deletedUser(userId);
 const editUser = (userId, updateUser) =>
   userRepository.editUser({ id: userId, ...updateUser });
 
