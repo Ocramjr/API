@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import {
   createUser,
+  deletedUser,
   editUser,
   getAllUsers,
   getUserByCpf,
@@ -69,7 +70,7 @@ const createNewUser = (req, res) => {
   const newUser = createUser(user);
 
   if (newUser) {
-    return res.status(200).json({
+    return res.status(201).json({
       data: newUser,
       mensagem: "Usuário criado com sucesso!",
     });
@@ -103,7 +104,9 @@ const deleteAUser = (req, res) => {
     return res.status(400).json({ mensagem: "Usuário não encontrado!" })
   }
 
-  return res.status(200).json({ data: user, mensagem: "Usuário deletado com sucesso!" })
+  const deleteUser = deletedUser(userId);
+
+  return res.status(200).json({ data: deleteUser, mensagem: "Usuário deletado com sucesso!" })
 
 }
 

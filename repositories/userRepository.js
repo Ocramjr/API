@@ -1,15 +1,4 @@
-import { v4 as uuidv4 } from "uuid";
-
-const users = [
-  {
-    id: uuidv4(), // gerar na hora da criação e id único
-    fullname: "Marco Antonio", // Obrigatório
-    birthdate: new Date(),
-    email: "email@gmail.com", // Obrigatório e único
-    phone: "85999999999",
-    cpf: "00000000000", // Obrigatório e 11 caracteres e único.
-  },
-];
+import { users } from "../mock/users.js";
 
 const getAllUsers = () => users;
 
@@ -25,25 +14,24 @@ const createUser = (newUser) => {
   return newUser;
 };
 
-const editUser = (updateUser) => {
-  const index = users.findIndex((user) => user.id === updateUser.id);
-  users[index] = updateUser;
-  return updateUser;
+const editUser = (updatedUser) => {
+  const index = users.findIndex((user) => user.id === updatedUser.id);
+  users[index] = updatedUser;
+  return updatedUser;
 };
 
-const deletedUser = (deleteUser) => {
-  const index = users.findIndex((user) => user.id === deleteUser.id);
+const deletedUser = (userId) => {
+  const index = users.findIndex((user) => user.id === userId);
   const deletedUser = users.splice(index, 1);
   return deletedUser;
 };
 
-
 export default {
-  getAllUsers,
-  getUserById,
-  getUserByEmail,
-  getUserByCpf,
-  createUser,
   editUser,
+  createUser,
   deletedUser,
+  getUserById,
+  getUserByCpf,
+  getAllUsers,
+  getUserByEmail,
 };
