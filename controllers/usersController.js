@@ -32,6 +32,7 @@ const createNewUser = (req, res) => {
   const userById = getUserById(id);
   const user = {
     id,
+    stores: [],
     ...req.body,
   };
 

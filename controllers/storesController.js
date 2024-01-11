@@ -1,6 +1,12 @@
 import { v4 as uuidv4 } from "uuid";
-import { createStore, deletedStore, getAllStores, getStoreById } from "../services/storesService.js";
-import { getUserById } from "../services/usersService.js";
+import {
+  createStore,
+  deletedStore,
+  editStore,
+  getAllStores,
+  getStoreById,
+} from "../services/storesService.js";
+import { addStoreToUser, getUserById } from "../services/usersService.js";
 
 const listAllStores = (req, res) => {
   const stores = getAllStores();
@@ -40,19 +46,21 @@ const listAStore = (req, res) => {
 const deleteAStore = (req, res) => {
   const storeId = req.params.id;
 
-  if(!storeId) {
-    return res.status(400).json({ mensagem: "O Id é obrigatório." })
+  if (!storeId) {
+    return res.status(400).json({ mensagem: "O Id é obrigatório." });
   }
 
   const store = getStoreById(storeId);
 
-  if(!store) {
-    return res.status(400).json({ mensagem: "Store não encontrado!" })
+  if (!store) {
+    return res.status(400).json({ mensagem: "Store não encontrado!" });
   }
 
-  const deleteStore = deleteStore(storeId)
+  const deleteStore = deleteStore(storeId);
 
-  return res.status(200).json({ data: deletedStore, mensagem: "Store deletado com sucesso!" })
+  return res
+    .status(200)
+    .json({ data: deletedStore, mensagem: "Store deletado com sucesso!" });
 };
 
 const createANewStore = (req, res) => {
@@ -63,10 +71,10 @@ const createANewStore = (req, res) => {
     return res.status(400).json({ mensagem: "Loja já cadastrada!" });
   }
 
-  const user = getUserById(req.body.userId)
+  const user = getUserById(req.body.userId);
 
   if (!user) {
-    return res.status(400).json( {mensagem: "Usuário não encontrado!"} )
+    return res.status(400).json({ mensagem: "Usuário não encontrado!" });
   }
   const newStore = {
     id,
@@ -89,15 +97,34 @@ const createANewStore = (req, res) => {
     return res.status(400).json({ mensagem: "Cnpj inválido!" });
   }
 
-  const aNewStore = createStore(newStore);
+  const createNewStore = createStore(newStore);
 
-  if (aNewStore) {
+  if (createNewStore) {
+    addStoreToUser(createNewStore.userId, createNewStore);
     return res.status(201).json({
-      data: aNewStore,
+      data: createNewStore,
       mensagem: "Loja criada com sucesso!",
     });
   }
 };
-const editAStore = (req, res) => {};
+const editAStore = (req, res) => {
+  const storeId = req.params.id;
 
-export { listAllStores, listAStore, deleteAStore, createANewStore };
+  if (!storeId) {
+    return res.status(400).json({ mensagem: "O Id da loja é obrigatório." });
+  }
+
+  const store = getStoreById(storeId);
+
+  if (!store) {
+    return res.status(400).json({ mensagem: "Loja não encontrada!" });
+  }
+
+  const editedStore = editStore(storeId, { ...store, ...req.body });
+
+  return res
+    .status(200)
+    .json({ data: editedStore, mensagem: "Store editado com sucesso!" });
+};
+
+export { listAllStores, listAStore, deleteAStore, createANewStore, editAStore };
