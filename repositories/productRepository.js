@@ -1,4 +1,4 @@
-import { products } from "../mock/products";
+import { products } from "../mock/products.js";
 
 const getAllProducts = () => products;
 

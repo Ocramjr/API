@@ -1,4 +1,4 @@
-import productRepository from "../repositories/productRepository.js";
+import * as productRepository from "../repositories/productRepository.js";
 
 const getAllProducts = () => productRepository.getAllProducts();
 const getProductById = (productId) =>
@@ -9,6 +9,7 @@ const deletedProduct = (productId) =>
   productRepository.deletedProduct(productId);
 const editProduct = (productId, updatedProduct) =>
   productRepository.editProduct({ id: productId, ...updatedProduct });
+
 
 export {
   createProduct,
