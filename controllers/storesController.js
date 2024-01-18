@@ -6,7 +6,7 @@ import {
   getAllStores,
   getStoreById,
 } from "../services/storesService.js";
-import { addStoreToUser, getUserById } from "../services/usersService.js";
+import { addStoreToAUser, getUserById } from "../services/usersService.js";
 
 const listAllStores = (req, res) => {
   const stores = getAllStores();
@@ -41,26 +41,28 @@ const listAStore = (req, res) => {
       .status(200)
       .json({ data: store, mensagem: "Loja encontrada com sucesso!" });
   }
+
+  return res.status(400).json({ mensagem: "ID não existe!" });
 };
 
 const deleteAStore = (req, res) => {
   const storeId = req.params.id;
 
   if (!storeId) {
-    return res.status(400).json({ mensagem: "O Id é obrigatório." });
+    return res.status(400).json({ mensagem: "O id é obrigatório!" });
   }
 
   const store = getStoreById(storeId);
 
   if (!store) {
-    return res.status(400).json({ mensagem: "Store não encontrado!" });
+    return res.status(400).json({ mensagem: "A loja não foi encontrada!" });
   }
 
-  const deleteStore = deleteStore(storeId);
+  const deleteStore = deletedStore(storeId);
 
   return res
     .status(200)
-    .json({ data: deletedStore, mensagem: "Store deletado com sucesso!" });
+    .json({ data: deleteStore, mensagem: "Loja deletada com sucesso!" });
 };
 
 const createANewStore = (req, res) => {
@@ -76,55 +78,58 @@ const createANewStore = (req, res) => {
   if (!user) {
     return res.status(400).json({ mensagem: "Usuário não encontrado!" });
   }
+
   const newStore = {
     id,
     ...req.body,
   };
 
-  if (!newStore.name) {
-    return res.status(400).json({ mensagem: "Nome da store obrigatória!" });
-  }
-
   if (!newStore.email) {
-    return res.status(400).json({ mensagem: "Email obrigatório" });
+    return res.status(400).json({ mensagem: "O e-mail é obrigatório!" });
   }
 
   if (!newStore.cnpj) {
-    return res.status(400).json({ mensagem: "CNPJ obrigatório!" });
+    return res.status(400).json({ mensagem: "O CNPJ é obrigatório!" });
   }
 
   if (newStore.cnpj.length !== 14) {
-    return res.status(400).json({ mensagem: "Cnpj inválido!" });
+    return res
+      .status(400)
+      .json({ mensagem: "O CNPJ precisa ter 14 caracteres!" });
   }
 
-  const createNewStore = createStore(newStore);
+  if (!newStore.name) {
+    return res.status(400).json({ mensagem: "O nome da loja é obrigatório!" });
+  }
 
-  if (createNewStore) {
-    addStoreToUser(createNewStore.userId, createNewStore);
-    return res.status(201).json({
-      data: createNewStore,
-      mensagem: "Loja criada com sucesso!",
-    });
+  const createdStore = createStore(newStore);
+
+  if (createdStore) {
+    addStoreToAUser(createdStore.userId, createdStore);
+    return res
+      .status(201)
+      .json({ data: createdStore, mensagem: "Loja criada com sucesso!" });
   }
 };
+
 const editAStore = (req, res) => {
   const storeId = req.params.id;
 
   if (!storeId) {
-    return res.status(400).json({ mensagem: "O Id da loja é obrigatório." });
+    return res.status(400).json({ mensagem: "O ID da loja é obrigatório!" });
   }
 
   const store = getStoreById(storeId);
 
   if (!store) {
-    return res.status(400).json({ mensagem: "Loja não encontrada!" });
+    return res.status(400).json({ mensagem: "Loja não foi encontrada!" });
   }
 
-  const editedStore = editStore(storeId, { ...store, ...req.body });
+  const editedStore = editStore(store.id, { ...store, ...req.body });
 
   return res
     .status(200)
-    .json({ data: editedStore, mensagem: "Store editado com sucesso!" });
+    .json({ data: editedStore, mensagem: "Loja editada com sucesso!" });
 };
 
 export { listAllStores, listAStore, deleteAStore, createANewStore, editAStore };

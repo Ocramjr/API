@@ -8,7 +8,7 @@ const createUser = (newUser) => userRepository.createUser(newUser);
 const deletedUser = (userId) => userRepository.deletedUser(userId);
 const editUser = (userId, updateUser) =>
   userRepository.editUser({ id: userId, ...updateUser });
-const addStoreToUser = (userId, store) => {
+const addStoreToAUser = (userId, store) => {
   const user = getUserById(userId);
   user.stores.push(store);
 
@@ -22,5 +22,5 @@ export {
   createUser,
   deletedUser,
   editUser,
-  addStoreToUser,
+  addStoreToAUser,
 };

@@ -1,10 +1,19 @@
-import storeRepository from "../repositories/storeRepository.js";
+import productRepository from "../repositories/productRepository.js";
 
-const getAllStores = () => storeRepository.getAllStores();
-const getStoreById = (storeId) => storeRepository.getStoreById(storeId);
-const createStore = (newStore) => storeRepository.createStore(newStore);
-const deletedStore = (storeId) => storeRepository.deletedStore(storeId);
-const editStore = (storeId, updatedStore) =>
-  storeRepository.editStore({ id: storeId, ...updatedStore });
+const getAllProducts = () => productRepository.getAllProducts();
+const getProductById = (productId) =>
+  productRepository.getProductById(productId);
+const createProduct = (newProduct) =>
+  productRepository.createProduct(newProduct);
+const deletedProduct = (productId) =>
+  productRepository.deletedProduct(productId);
+const editProduct = (productId, updatedProduct) =>
+  productRepository.editProduct({ id: productId, ...updatedProduct });
 
-export { getAllStores, getStoreById, createStore, deletedStore, editStore };
+export {
+  createProduct,
+  deletedProduct,
+  editProduct,
+  getAllProducts,
+  getProductById,
+};
