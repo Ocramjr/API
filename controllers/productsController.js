@@ -4,10 +4,11 @@ import {
   getAllProducts,
   getProductById,
   createProduct,
+  editProduct,
+  getProductCost,
+  getAllProductsCost,
 } from "../services/productsService.js";
-import { editProduct } from "../repositories/productRepository.js";
 import { getStoreById, addProductToAStore } from "../services/storesService.js";
-
 
 const listAllProducts = (req, res) => {
   const products = getAllProducts();
@@ -29,7 +30,7 @@ const listAProduct = (req, res) => {
   const productId = req.params.id;
 
   if (!productId) {
-    return res.status(400).json({ mensagem: "O id é obrigatório" });
+    return res.status(400).json({ mensagem: "O id do produto é obrigatório" });
   }
 
   const product = getProductById(productId);
@@ -71,9 +72,8 @@ const createAProduct = (req, res) => {
   if (productById) {
     return res.status(400).json({ mensagem: "Produto já cadastrada!" });
   }
- 
+
   const store = getStoreById(req.body.storeId);
- 
 
   if (!store) {
     return res.status(400).json({ mensagem: "Loja não encontrada!" });
@@ -85,26 +85,31 @@ const createAProduct = (req, res) => {
   };
 
   if (!newProduct.name) {
-    return res.status(400).json({ mensagem: "O nome do produto é obrigatório!" });
+    return res
+      .status(400)
+      .json({ mensagem: "O nome do produto é obrigatório!" });
   }
 
   if (!newProduct.price) {
-    return res.status(400).json({ mensagem: "O preço do produto é obrigatório!" });
+    return res
+      .status(400)
+      .json({ mensagem: "O preço do produto é obrigatório!" });
   }
 
   if (!newProduct.quantity) {
-    return res.status(400).json({ mensagem: "A quantidade do produto é obrigatório!" });
+    return res
+      .status(400)
+      .json({ mensagem: "A quantidade do produto é obrigatório!" });
   }
 
   const createdProduct = createProduct(newProduct);
-  console.log(createdProduct)
+
   if (createdProduct) {
     addProductToAStore(createdProduct.storeId, createdProduct);
     return res
       .status(201)
       .json({ data: createdProduct, mensagem: "Produto criado com sucesso!" });
   }
- 
 };
 
 const editAProduct = (req, res) => {
@@ -127,9 +132,48 @@ const editAProduct = (req, res) => {
     .json({ data: editedProduct, mensagem: "Loja editada com sucesso!" });
 };
 
-const listProductsCost = (req, res) => {};
+const listProductCost = (req, res) => {
+  const productId = req.params.id;
 
-const listProductCost = (req, res) => {};
+  if (!productId) {
+    return res.status(400).json({ mensagem: "O id do produto é obrigatório" });
+  }
+
+  const product = getProductById(productId);
+
+  if (!product) {
+    return res.status(400).json({ mensagem: "O id do produto é inexistente!" });
+  }
+
+  const costAProduct = getProductCost(product);
+
+  return res
+    .status(200)
+    .json({
+      data: costAProduct,
+      mensagem: "Preço do produto encontrado com sucesso!",
+    });
+};
+
+const listProductsCost = (req, res) => {
+  const products = getAllProducts();
+  // usar metodo reduce
+  // retorna o valor total do custo de todos os produtos
+
+  if (products.length === 0) {
+    return res.status(200).json({ mensagem: "Não há produto cadastrado!" });
+  }
+
+  const costAllProducts = getAllProductsCost(products);
+
+  if (products) {
+    return res
+      .status(200)
+      .json({ data: costAllProducts, mensagem: "Produtos encontrados com sucesso!" });
+  }
+
+  return res.status(400).json({ mensagem: "Produtos não encontrados!" });
+};
 
 export {
   createAProduct,
