@@ -6,7 +6,7 @@ import {
   createProduct,
   editProduct,
   getProductCost,
-  getAllProductsCost,
+  getProductsCosts,
 } from "../services/productsService.js";
 import { getStoreById, addProductToAStore } from "../services/storesService.js";
 
@@ -147,32 +147,24 @@ const listProductCost = (req, res) => {
 
   const costAProduct = getProductCost(product);
 
-  return res
-    .status(200)
-    .json({
-      data: costAProduct,
-      mensagem: "Preço do produto encontrado com sucesso!",
-    });
+  return res.status(200).json({
+    data: costAProduct,
+    mensagem: "Preço do produto encontrado com sucesso!",
+  });
 };
 
 const listProductsCost = (req, res) => {
   const products = getAllProducts();
-  // usar metodo reduce
-  // retorna o valor total do custo de todos os produtos
-
   if (products.length === 0) {
-    return res.status(200).json({ mensagem: "Não há produto cadastrado!" });
+    return res.status(400).json({ mensagem: "Não há produtos cadastrados" });
   }
 
-  const costAllProducts = getAllProductsCost(products);
+  const productsCosts = getProductsCosts(products);
 
-  if (products) {
-    return res
-      .status(200)
-      .json({ data: costAllProducts, mensagem: "Produtos encontrados com sucesso!" });
-  }
-
-  return res.status(400).json({ mensagem: "Produtos não encontrados!" });
+  return res.status(200).json({
+    data: productsCosts,
+    mensagem: "Custo total de estoque dos produtos",
+  });
 };
 
 export {

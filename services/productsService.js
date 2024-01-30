@@ -1,4 +1,3 @@
-import { products } from "../mock/products.js";
 import * as productRepository from "../repositories/productRepository.js";
 
 const getAllProducts = () => productRepository.getAllProducts();
@@ -20,12 +19,14 @@ const getProductCost = (product) => {
   return 0;
 };
 
-const initialCost = 0;
-const getAllProductsCost = (products) => {
-  
-}
+const getProductsCosts = (products) => {
+  const productsCosts = products.reduce((previous, current) => {
+    const total = current.price * current.quantity;
+    return previous + total;
+  }, 0);
 
-//Criar metodo com a lógica
+  return productsCosts;
+};
 
 
 export {
@@ -35,5 +36,5 @@ export {
   getAllProducts,
   getProductById,
   getProductCost,
-  getAllProductsCost,
+  getProductsCosts,
 };
