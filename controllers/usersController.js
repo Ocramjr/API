@@ -9,8 +9,9 @@ import {
   getUserById,
 } from "../services/usersService.js";
 
-const listAllUsers = (req, res) => {
-  const users = getAllUsers();
+const listAllUsers = async (req, res) => {
+  const users = await getAllUsers();
+  
   if (users.length === 0) {
     return res.status(200).json({
       mensagem: "Não há usuários cadastrados!",
@@ -24,7 +25,7 @@ const listAllUsers = (req, res) => {
     });
   }
 
-  return res.status(400).json({ mensagem: "Usuários não encontrados." });
+  // return res.status(400).json({ mensagem: "Usuários não encontrados." });
 };
 
 const createNewUser = (req, res) => {
@@ -78,34 +79,34 @@ const createNewUser = (req, res) => {
   }
 };
 
-const listAUser = (req, res) => {
+const listAUser = async (req, res) => {
   const userId = req.params.id;
 
   if(!userId) {
     return res.status(400).json({ mensagem: "O Id é obrigatório." })
   }
 
-  const user = getUserById(userId);
+  const user = await getUserById(userId);
 
   if(user) {
     return res.status(200).json({ data: user, mensagem: "Usuário encontrado com sucesso! "})
   }
 }
 
-const deleteAUser = (req, res) => {
+const deleteAUser = async (req, res) => {
   const userId = req.params.id;
 
   if(!userId) {
     return res.status(400).json({ mensagem: "O Id é obrigatório." })
   }
 
-  const user = getUserById(userId);
+  const user = await getUserById(userId);
 
-  if(!user) {
+  if(user.length === 0) {
     return res.status(400).json({ mensagem: "Usuário não encontrado!" })
   }
 
-  const deleteUser = deletedUser(userId);
+  const deleteUser = await deletedUser(userId);
 
   return res.status(200).json({ data: deleteUser, mensagem: "Usuário deletado com sucesso!" })
 

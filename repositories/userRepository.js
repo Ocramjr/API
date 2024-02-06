@@ -1,13 +1,31 @@
-import { users } from "../mock/users.js";
+// import { users } from "../mock/users.js";
+import { connection } from "../database.js";
 
-const getAllUsers = () => users;
+const getAllUsers = async () => {
+  const [results] = await connection.query("SELECT * FROM `user`");
+  return results;
+};
 
-const getUserById = (userId) => users.find((user) => user.id === userId);
+const getUserById = async (userId) => {
+  const [results] = await connection.query(
+    `SELECT * FROM user WHERE id = ${userId}`
+  );
+  return results;
+};
 
-const getUserByEmail = (userEmail) =>
-  users.find((user) => user.email === userEmail);
+const getUserByEmail = async (userEmail) =>{
+  const [results] = await connection.query(
+    `SELECT * FROM user WHERE email = ${userEmail}`
+  );
+  return results;
+}
 
-const getUserByCpf = (userCpf) => users.find((user) => user.cpf === userCpf);
+const getUserByCpf = async (userCpf) => {
+  const [results] = await connection.query(
+    `SELECT * FROM user WHERE cpf = ${userCpf}`
+  );
+  return results;
+};
 
 const createUser = (newUser) => {
   users.push(newUser);
@@ -20,10 +38,11 @@ const editUser = (updatedUser) => {
   return updatedUser;
 };
 
-const deletedUser = (userId) => {
-  const index = users.findIndex((user) => user.id === userId);
-  const deletedUser = users.splice(index, 1);
-  return deletedUser;
+const deletedUser = async (userId) => {
+  const [results] = await connection.query(
+    `DELETE FROM user WHERE id = ${userId}`
+    );
+  return results;
 };
 
 export default {
