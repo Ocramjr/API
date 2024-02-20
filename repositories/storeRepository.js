@@ -1,24 +1,42 @@
-import { stores } from "../mock/stores.js";
+import { connection } from "../database.js";
 
-const getAllStores = () => stores;
-
-const getStoreById = (storeId) => stores.find((store) => store.id === storeId);
-
-const createStore = (newStore) => {
-  stores.push(newStore);
-  return newStore;
+const getAllStores = async () => {
+  const [results] = await connection.query(`SELECT * FROM stores`);
+  return results;
 };
 
-const editStore = (updatedStore) => {
-  const index = stores.findIndex((store) => store.id === updatedStore.id);
-  stores[index] = updatedStore;
-  return updatedStore;
+const getStoreById = async (storeId) => {
+  const [results] = await connection.query(
+    `SELECT * FROM stores WHERE id = ${storeId}`
+  );
+  return results;
 };
 
-const deletedStore = (storeId) => {
-  const index = stores.findIndex((store) => store.id === storeId);
-  const deletedStore = stores.splice(index, 1);
-  return deletedStore;
+const createStore = async (newStore) => {
+  const columns = Object.keys(newStore);
+  const [results] = await connection.query(
+    `INSERT INTO stores (${columns.map(
+      (column) => column
+    )}) VALUES (${columns.map((column) => `'${newStore[column]}'`)})`
+  );
+  return results;
+};
+
+const editStore = async (updatedStore) => {
+  const columns = Object.keys(updatedStore);
+  const [results] = await connection.query(
+    `UPDATE stores SET ${columns.map(
+      (column) => `${column} = "${updatedStore[column]}" `
+    )} WHERE id = ${updatedStore.id};`
+  );
+  return results;
+};
+
+const deletedStore = async (storeId) => {
+  const [results] = await connection.query(
+    `DELETE FROM stores WHERE id = ${storeId}`
+  );
+  return results;
 };
 
 export default {

@@ -8,7 +8,7 @@ import {
   getProductCost,
   getProductsCosts,
 } from "../services/productsService.js";
-import { getStoreById, addProductToAStore } from "../services/storesService.js";
+import { getStoreById } from "../services/storesService.js";
 
 const listAllProducts = (req, res) => {
   const products = getAllProducts();

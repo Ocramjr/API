@@ -8,8 +8,8 @@ import {
 } from "../services/storesService.js";
 import { addStoreToAUser, getUserById } from "../services/usersService.js";
 
-const listAllStores = (req, res) => {
-  const stores = getAllStores();
+const listAllStores = async (req, res) => {
+  const stores = await getAllStores();
 
   if (stores.length === 0) {
     return res.status(200).json({
@@ -36,7 +36,7 @@ const listAStore = (req, res) => {
 
   const store = getStoreById(storeId);
 
-  if (store) {
+  if (store.length > 0) {
     return res
       .status(200)
       .json({ data: store, mensagem: "Loja encontrada com sucesso!" });
