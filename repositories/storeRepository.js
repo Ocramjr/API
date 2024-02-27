@@ -1,13 +1,13 @@
 import { connection } from "../database.js";
 
 const getAllStores = async () => {
-  const [results] = await connection.query(`SELECT * FROM stores`);
+  const [results] = await connection.query("SELECT * FROM stores");
   return results;
 };
 
 const getStoreById = async (storeId) => {
   const [results] = await connection.query(
-    `SELECT * FROM stores WHERE id = ${storeId}`
+    `SELECT * FROM stores WHERE id = '${storeId}'`
   );
   return results;
 };
@@ -33,10 +33,10 @@ const editStore = async (updatedStore) => {
 };
 
 const deletedStore = async (storeId) => {
-  const [results] = await connection.query(
+  const deletedStore = await connection.query(
     `DELETE FROM stores WHERE id = ${storeId}`
   );
-  return results;
+  return deletedStore;
 };
 
 export default {

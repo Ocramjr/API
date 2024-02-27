@@ -1,27 +1,42 @@
-import { products } from "../mock/products.js";
+import { connection } from "../database.js";
 
-const getAllProducts = () => products;
-
-const getProductById = (productId) =>
-  products.find((product) => product.id === productId);
-
-const createProduct = (newProduct) => {
-  products.push(newProduct);
-  return newProduct;
+const getAllProducts = async () => {
+  const [results] = await connection.query("SELECT * FROM products");
+  return results;
 };
 
-const editProduct = (updatedProduct) => {
-  const index = products.findIndex(
-    (product) => product.id === updatedProduct.id
+const getProductById = async (productId) => {
+  const [results] = await connection.query(
+    `SELECT * FROM products WHERE id = '${productId}'`
   );
-  products[index] = updatedProduct;
-  return updatedProduct;
+  return results;
 };
 
-const deletedProduct = (productId) => {
-  const index = products.findIndex((product) => product.id === productId);
-  const deletedProduct = products.splice(index, 1);
-  return deletedProduct;
+const createProduct = async (newProduct) => {
+  const columns = Object.keys(newProduct);
+  const [results] = await connection.query(
+    `INSERT INTO products (${columns.map(
+      (column) => column
+    )}) VALUES (${columns.map((column) => `'${newProduct[column]}'`)})`
+  );
+  return results;
+};
+
+const editProduct = async (updatedProduct) => {
+  const columns = Object.keys(updatedProduct);
+  const [results] = await connection.query(
+    `UPDATE products SET ${columns.map(
+      (column) => `${column} = "${updatedProduct[column]}" `
+    )} WHERE id = ${updatedProduct.id};`
+  );
+  return results;
+};
+
+const deletedProduct = async (productId) => {
+  const deletedStore = await connection.query(
+    `DELETE FROM products WHERE id = ${productId}`
+  );
+  return deletedStore;
 };
 
 export {

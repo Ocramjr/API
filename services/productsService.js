@@ -1,15 +1,15 @@
 import * as productRepository from "../repositories/productRepository.js";
 
-const getAllProducts = () => productRepository.getAllProducts();
-const getProductById = (productId) =>
-  productRepository.getProductById(productId);
-const createProduct = (newProduct) =>
-  productRepository.createProduct(newProduct);
-const deletedProduct = (productId) =>
-  productRepository.deletedProduct(productId);
-const editProduct = (productId, updatedProduct) =>
-  productRepository.editProduct({ id: productId, ...updatedProduct });
-const getProductCost = (product) => {
+const getAllProducts = async () => await productRepository.getAllProducts();
+const getProductById = async (productId) =>
+  await productRepository.getProductById(productId);
+const createProduct = async (newProduct) =>
+  await productRepository.createProduct(newProduct);
+const deletedProduct = async (productId) =>
+  await productRepository.deletedProduct(productId);
+const editProduct = async (productId, updatedProduct) =>
+  await productRepository.editProduct({ id: productId, ...updatedProduct });
+const getProductCost = async (product) => {
   const cost = Number(product.price) * Number(product.quantity);
 
   if (cost > 0) {
@@ -27,7 +27,6 @@ const getProductsCosts = (products) => {
 
   return productsCosts;
 };
-
 
 export {
   createProduct,

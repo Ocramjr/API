@@ -10,10 +10,6 @@ const createUser = async (newUser) => await userRepository.createUser(newUser);
 const deletedUser = async (userId) => await userRepository.deletedUser(userId);
 const editUser = async (userId, updateUser) =>
   await userRepository.editUser({ id: userId, ...updateUser });
-const addStoreToAUser = (userId, store) => {
-  const user = getUserById(userId);
-  user.stores.push(store);
-};
 
 export {
   getAllUsers,
@@ -23,5 +19,4 @@ export {
   createUser,
   deletedUser,
   editUser,
-  addStoreToAUser,
 };
