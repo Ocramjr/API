@@ -10,14 +10,14 @@ import {
 } from "../services/productsService.js";
 import { getStoreById } from "../services/storesService.js";
 
-const listAllProducts = (req, res) => {
-  const products = getAllProducts();
+const listAllProducts = async (req, res) => {
+  const products = await getAllProducts();
 
-  if (products.length === 0) {
+  if (!products.length) {
     return res.status(200).json({ mensagem: "Não há produto cadastrado!" });
   }
 
-  if (products) {
+  if (!!products.length) {
     return res
       .status(200)
       .json({ data: products, mensagem: "Produtos encontrados com sucesso!" });
@@ -26,14 +26,14 @@ const listAllProducts = (req, res) => {
   return res.status(400).json({ mensagem: "Produtos não encontrados!" });
 };
 
-const listAProduct = (req, res) => {
+const listAProduct = async (req, res) => {
   const productId = req.params.id;
 
   if (!productId) {
     return res.status(400).json({ mensagem: "O id do produto é obrigatório" });
   }
 
-  const product = getProductById(productId);
+  const product = await getProductById(productId);
 
   if (!product) {
     return res.status(400).json({ mensagem: "O id é inexistente!" });
@@ -64,25 +64,18 @@ const deleteAProduct = (req, res) => {
     .json({ data: deleteProduct, mensagem: "Produto deletado com sucesso!" });
 };
 
-const createAProduct = (req, res) => {
-  const id = uuidv4();
+const createAProduct = async (req, res) => {
+  const store = await getStoreById(req.body.storeId);
 
-  const productById = getProductById(id);
-
-  if (productById) {
-    return res.status(400).json({ mensagem: "Produto já cadastrada!" });
+  if (!store.length) {
+    return res.status(400).json({ mensagem: "Loja não encontrada!" });
   }
-
-  const store = getStoreById(req.body.storeId);
 
   if (!store) {
     return res.status(400).json({ mensagem: "Loja não encontrada!" });
   }
 
-  const newProduct = {
-    id,
-    ...req.body,
-  };
+  const newProduct = req.body;
 
   if (!newProduct.name) {
     return res
@@ -102,13 +95,12 @@ const createAProduct = (req, res) => {
       .json({ mensagem: "A quantidade do produto é obrigatório!" });
   }
 
-  const createdProduct = createProduct(newProduct);
+  const productCreated = await createProduct(newProduct);
 
-  if (createdProduct) {
-    addProductToAStore(createdProduct.storeId, createdProduct);
+  if (productCreated.affectedRows > 0) {
     return res
       .status(201)
-      .json({ data: createdProduct, mensagem: "Produto criado com sucesso!" });
+      .json({ data: productCreated, mensagem: "Produto criado com sucesso!" });
   }
 };
 
